@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>J3thro_ | Live Streamer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050609;
+      --bg-alt: #0b0b10;
+      --accent: #f97316; /* orange */
+      --accent-soft: rgba(249, 115, 22, 0.14);
+      --accent-strong: #fb923c;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --card-radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #111827 0, #020308 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1080px;
+      background: radial-gradient(circle at top left, #020309, #020617);
+      border-radius: 28px;
+      padding: 28px 22px 26px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.22), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(234, 88, 12, 0.18), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.16), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: screen;
+    }
+
+    .page-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 999px;
+      background: conic-gradient(from 210deg,
+        #f97316,
+        #fb923c,
+        #f97316,
+        #1f2937,
+        #f97316);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 30% 0%, #111827, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fef3c7;
+      overflow: hidden;
+    }
+
+    .avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-text h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand-text p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill-link {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(3, 7, 18, 0.9);
+      backdrop-filter: blur(12px);
+      transition: transform 0.15s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease, background 0.15s ease;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .pill-link strong {
+      font-weight: 600;
+    }
+
+    .pill-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.85);
+      border-color: rgba(249, 115, 22, 0.95);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .pill-link.twitch {
+      border-color: rgba(249, 115, 22, 0.95);
+      background: radial-gradient(circle at 0 0, rgba(249, 115, 22, 0.5), #030712);
+    }
+
+    .pill-link.discord {
+      border-color: rgba(148, 163, 184, 0.9);
+    }
+
+    .pill-link.live-badge {
+      border-color: rgba(248, 113, 113, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.45), #030712);
+    }
+
+    .pill-link.live-badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #ef4444;
+      box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.45);
+    }
+
+    /* STATS BAR */
+    .stats-card {
+      margin-bottom: 18px;
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stats-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(3, 7, 18, 0.95);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .stat-pill span.label {
+      color: var(--text-muted);
+    }
+
+    .stat-pill span.value {
+      font-weight: 700;
+      color: var(--accent-strong);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .socials {
+        justify-content: flex-start;
+      }
+
+      .stats-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border-radius: var(--card-radius);
+      padding: 14px 14px 13px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .card-title {
+      margin-top: 2px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-muted);
+    }
+
+    .badge.accent {
+      border-color: rgba(249, 115, 22, 1);
+      color: #fed7aa;
+      background: var(--accent-soft);
+    }
+
+    /* Stream player */
+    .player {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(249, 115, 22, 0.9);
+      background: radial-gradient(circle at top, #111827, #020617);
+      position: relative;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 10px;
+    }
+
+    .player iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .player-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.45);
+    }
+
+    /* About & schedule */
+    .tagline {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .schedule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .schedule-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.82rem;
+      padding: 5px 7px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 0 0, rgba(249, 115, 22, 0.16), transparent),
+        rgba(3, 7, 18, 0.98);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .schedule-item span:first-child {
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .schedule-item span:last-child {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(3, 7, 18, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #fde68a;
+    }
+
+    /* Chat + clips grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .bottom-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .chat-frame {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      height: 420px;
+      background: #020617;
+    }
+
+    .chat-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .clips-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 520px) {
+      .clips-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .clip-embed {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: #020617;
+      aspect-ratio: 16 / 9;
+    }
+
+    .clip-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .clip-label {
+      position: absolute;
+      inset: auto 8px 8px 8px;
+      font-size: 0.7rem;
+      background: linear-gradient(to right, rgba(3, 7, 18, 0.95), transparent);
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .clip-label span {
+      font-size: 0.82rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(31, 41, 55, 0.95);
+      padding-top: 9px;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    footer a {
+      color: var(--accent-strong);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(249, 115, 22, 0.8);
+    }
+
+    footer a:hover {
+      border-bottom-style: solid;
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding: 22px 14px 20px;
+        border-radius: 22px;
+      }
+
+      .card {
+        padding: 12px 10px 11px;
+      }
+
+      .brand-text h1 {
+        font-size: 1.3rem;
+      }
+
+      .avatar {
+        width: 52px;
+        height: 52px;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="glow"></div>
+    <div class="page-inner">
+      <header>
+        <div class="brand">
+          <div class="avatar">
+            <div class="avatar-inner">
+              <!--
+                If you have your logo as an image, replace the line below with:
+                <img src="YOUR_LOGO_URL_HERE" alt="J3thro logo" />
+              -->
+              J3
+            </div>
+          </div>
+          <div class="brand-text">
+            <h1>J3thro_</h1>
+            <p>Just a bald bearded British guy playing games – chill vibes, high energy.</p>
+          </div>
+        </div>
+
+        <div class="socials">
+          <a class="pill-link twitch" href="https://twitch.tv/J3thro_" target="_blank">
+            🔴 <strong>Twitch</strong>
+          </a>
+          <a class="pill-link" href="https://youtube.com/@J3thro_" target="_blank">
+            ▶ <strong>YouTube</strong>
+          </a>
+          <a class="pill-link" href="https://x.com/J3thro_Tv" target="_blank">
+            ✦ <strong>Twitter</strong>
+          </a>
+          <a class="pill-link" href="https://tiktok.com/@J3thro_Official" target="_blank">
+            🎵 <strong>TikTok</strong>
+          </a>
+          <a class="pill-link discord" href="https://discord.gg/8ZZAHF8aZe" target="_blank">
+            💬 <strong>Discord</strong>
+          </a>
+          <a class="pill-link live-badge" href="#live">
+            LIVE
+          </a>
+        </div>
+      </header>
+
+      <!-- LIVE STATS -->
+      <section class="card stats-card">
+        <div class="stats-title">Live Stats (update when you like)</div>
+        <div class="stats-row">
+          <div class="stat-pill">
+            <span class="label">Twitch:</span>
+            <span class="value" id="stat-twitch">0</span>
+          </div>
+          <div class="stat-pill">
+            <span class="label">YouTube:</span>
+            <span class="value" id="stat-youtube">0</span>
+          </div>
+          <div class="stat-pill">
+            <span class="label">Twitter:</span>
+            <span class="value" id="stat-twitter">0</span>
+          </div>
+          <div class="stat-pill">
+            <span class="label">TikTok:</span>
+            <span class="value" id="stat-tiktok">0</span>
+          </div>
+        </div>
+      </section>
+
+      <main>
+        <!-- LEFT: Stream player -->
+        <section class="card" id="live">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Live on Twitch</div>
+              <div class="card-title">
+                Watch the Stream
+                <span class="badge accent">!socials in chat</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="player">
+            <iframe
+              src="https://player.twitch.tv/?channel=j3thro_&parent=j3throtv.github.io&muted=true"
+              allowfullscreen="true"
+              scrolling="no"
+              allow="autoplay; fullscreen">
+            </iframe>
+          </div>
+
+          <div class="player-footer">
+            <span><span class="dot"></span> Usually live most evenings – come hang out.</span>
+            <span>Missed it? Catch clips &amp; VODs below ↓</span>
+          </div>
+        </section>
+
+        <!-- RIGHT: About + schedule -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">About &amp; Schedule</div>
+              <div class="card-title">
+                When I Go Live
+                <span class="badge">UK time (GMT/BST)</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="tagline">
+            Hey, I’m <strong>J3thro_</strong> – I play shooters, Tarkov, and whatever
+            sounds fun. Chill, scuffed, bald, bearded British energy.  
+            Hang out, spam emotes, and vibe with the community.
+          </p>
+
+          <ul class="schedule-list">
+            <li class="schedule-item">
+              <span>Mon, Wed, Fri</span>
+              <span>19:00 – 22:00</span>
+            </li>
+            <li class="schedule-item">
+              <span>Saturday</span>
+              <span>Long streams, start around 17:00</span>
+            </li>
+            <li class="schedule-item">
+              <span>Extras</span>
+              <span>Bonus streams – watch Discord / Twitter</span>
+            </li>
+          </ul>
+
+          <div class="chips">
+            <span class="chip">🎮 Tarkov &amp; variety</span>
+            <span class="chip">💬 Chat-focused</span>
+            <span class="chip">🔥 High energy moments</span>
+            <span class="chip">📺 Clips &amp; YouTube content</span>
+          </div>
+        </section>
+      </main>
+
+      <!-- CHAT + CLIPS -->
+      <section class="bottom-grid">
+        <!-- Chat -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Twitch Chat</div>
+              <div class="card-title">
+                Talk shit, get vibes
+                <span class="badge">Be nice. Don’t be weird.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-frame">
+            <iframe
+              src="https://www.twitch.tv/embed/j3thro_/chat?parent=j3throtv.github.io"
+              scrolling="no">
+            </iframe>
+          </div>
+        </section>
+
+        <!-- Clips gallery -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Clips</div>
+              <div class="card-title">
+                Best Moments
+                <span class="badge accent">More on the Clips tab</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="clips-grid">
+            <div class="clip-embed">
+              <iframe
+                src="https://clips.twitch.tv/embed?clip=CulturedInnocentDiamondPeteZaroll-XdjvwOy9ArJD9nSx&amp;parent=j3throtv.github.io&amp;autoplay=false"
+                allowfullscreen="true">
+              </iframe>
+              <div class="clip-label">
+                <span>🧨</span> Begging for my life
+              </div>
+            </div>
+
+            <div class="clip-embed">
+              <iframe
+                src="https://clips.twitch.tv/embed?clip=RenownedAbnegatePanRitzMitz-sKdTq8kKrqeeMERl&amp;parent=j3throtv.github.io&amp;autoplay=false"
+                allowfullscreen="true">
+              </iframe>
+              <div class="clip-label">
+                <span>🤣</span> Thicker than a snicker
+              </div>
+            </div>
+
+            <div class="clip-embed">
+              <iframe
+                src="https://clips.twitch.tv/embed?clip=SlipperyCaringElephantMrDestructoid-t2x4sikUWgFHmpYe&amp;parent=j3throtv.github.io&amp;autoplay=false"
+                allowfullscreen="true">
+              </iframe>
+              <div class="clip-label">
+                <span>✨</span> Chill questing vibes
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <footer>
+        <span>© <span id="year"></span> J3thro_. All scuffed moments reserved.</span>
+        <span>Built for the <a href="https://twitch.tv/J3thro_" target="_blank">J3 community</a> ❤️</span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Auto year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // OPTIONAL: if you ever want to centrally set follower counts with JS,
+    // you can do it here instead of editing the HTML in multiple places.
+    // Example:
+    // const stats = {
+    //   twitch: 1234,
+    //   youtube: 567,
+    //   twitter: 890,
+    //   tiktok: 4321,
+    // };
+    // document.getElementById("stat-twitch").textContent = stats.twitch.toLocaleString();
+    // document.getElementById("stat-youtube").textContent = stats.youtube.toLocaleString();
+    // document.getElementById("stat-twitter").textContent = stats.twitter.toLocaleString();
+    // document.getElementById("stat-tiktok").textContent = stats.tiktok.toLocaleString();
+  </script>
+</body>
+</html>
